@@ -136,7 +136,7 @@ app.get("/api/images", async (req, res) => {
 // API: Delete an image from S3
 app.delete("/api/images", async (req, res) => {
   try {
-    const { key } = req.body;
+    const key = req.body?.key || req.query?.key;
     if (!key) return res.status(400).json({ error: "Key is required" });
 
     await s3.send(new DeleteObjectCommand({
