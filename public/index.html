@@ -79,7 +79,7 @@
       top: 0;
       z-index: 50;
       width: 100%;
-      background: rgba(255, 255, 255, 0.82);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(226, 232, 240, 0.8);
@@ -172,7 +172,7 @@
 
     .wrap {
       width: 100%;
-      max-width: 740px;
+      max-width: 760px;
       margin: 0 auto;
     }
 
@@ -762,6 +762,272 @@
     }
 
     /* -------------------------------------------
+       S3 CLOUD GALLERY SECTION
+    ------------------------------------------- */
+    .gallery-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: clamp(20px, 4.5vw, 32px);
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--card-border);
+      margin-top: 28px;
+    }
+
+    .gallery-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .gallery-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gallery-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+    }
+
+    .gallery-title {
+      font-size: clamp(17px, 3.5vw, 20px);
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .gallery-subtitle {
+      font-size: 13px;
+      color: var(--slate-500);
+      margin: 2px 0 0;
+    }
+
+    .gallery-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gallery-count-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(79, 70, 229, 0.16);
+    }
+
+    .gallery-refresh-btn {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 7px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--slate-700);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: auto;
+      transition: all 0.2s ease;
+    }
+
+    .gallery-refresh-btn:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+      color: var(--primary);
+    }
+
+    .gallery-warning {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .gallery-warning svg {
+      color: #d97706;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .gallery-item {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.08);
+      border-color: var(--primary);
+    }
+
+    .gallery-thumb-wrap {
+      width: 100%;
+      height: 140px;
+      background: #e2e8f0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+
+    .gallery-item:hover .gallery-thumb-wrap img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 6px;
+    }
+
+    .gallery-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-900);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gallery-item-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--slate-500);
+    }
+
+    .gallery-item-size {
+      background: #ffffff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      color: var(--success-text);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .gallery-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .gallery-item-actions a,
+    .gallery-item-actions button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      min-height: auto;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .gallery-btn-open {
+      background: var(--primary);
+      color: #ffffff !important;
+    }
+
+    .gallery-btn-open:hover {
+      background: var(--primary-hover);
+    }
+
+    .gallery-btn-copy {
+      background: #ffffff;
+      color: var(--slate-700) !important;
+      border: 1px solid var(--slate-200);
+    }
+
+    .gallery-btn-copy:hover {
+      background: var(--slate-100);
+    }
+
+    .gallery-empty {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--slate-500);
+    }
+
+    .empty-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--slate-100);
+      color: var(--slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .gallery-empty h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 4px;
+    }
+
+    .gallery-empty p {
+      font-size: 13px;
+      max-width: 360px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------
        "HOW TO USE" SECTION (কী করে ব্যবহার করবেন)
     ------------------------------------------- */
     .section-container {
@@ -1149,6 +1415,10 @@
         flex: 1 1 auto;
       }
 
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
       .footer-container {
         flex-direction: column;
         align-items: flex-start;
@@ -1197,6 +1467,7 @@
 
       <ul class="nav-links">
         <li><a href="#compressor">Compressor</a></li>
+        <li><a href="#s3-gallery">S3 Gallery</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#faq">FAQ</a></li>
@@ -1212,7 +1483,7 @@
       <div class="hero-intro">
         <div class="badge-pill">
           <span class="badge-dot"></span>
-          Fast Client-Side Compression • AWS S3 Ready
+          Fast Client-Side Compression • AWS S3 Cloud Sync
         </div>
         <h1 class="hero-title">
           <span>Smart Image</span>
@@ -1361,6 +1632,58 @@
 
         </div>
       </div>
+
+      <!-- S3 CLOUD GALLERY SECTION (নিচে S3 আপলোড তালিকা) -->
+      <div class="gallery-card" id="s3-gallery">
+        <div class="gallery-header">
+          <div class="gallery-title-box">
+            <div class="gallery-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="gallery-title">AWS S3 Uploaded Files</h3>
+              <p class="gallery-subtitle">Images stored in your cloud bucket (mini-image-compressor-2026-debobroto)</p>
+            </div>
+          </div>
+          <div class="gallery-actions">
+            <span class="gallery-count-badge" id="galleryCount">0 Files</span>
+            <button class="gallery-refresh-btn" id="refreshGalleryBtn" title="Refresh files from S3">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Warning / Setup alert if S3 permission is incomplete -->
+        <div class="gallery-warning" id="galleryWarning" style="display:none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div class="warning-text" id="galleryWarningText"></div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid" id="galleryGrid"></div>
+
+        <!-- Empty State -->
+        <div class="gallery-empty" id="galleryEmpty">
+          <div class="empty-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+              <line x1="12" y1="13" x2="12" y2="17"/>
+              <line x1="12" y1="9" x2="12.01" y2="9"/>
+            </svg>
+          </div>
+          <h4>No Images In S3 Yet</h4>
+          <p>Compress an image above and tap <strong>Upload to AWS S3</strong> to view and manage your uploaded files here.</p>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -1551,6 +1874,7 @@
 
       <ul class="footer-links">
         <li><a href="#compressor">Compressor</a></li>
+        <li><a href="#s3-gallery">S3 Gallery</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#faq">FAQ</a></li>
@@ -1583,7 +1907,15 @@
           savedEl = document.getElementById("saved"),
           fill = document.getElementById("fill"),
           reset = document.getElementById("reset"),
-          presetBtns = document.querySelectorAll(".preset-btn");
+          presetBtns = document.querySelectorAll(".preset-btn"),
+          // Gallery elements
+          galleryCard = document.getElementById("s3-gallery"),
+          galleryGrid = document.getElementById("galleryGrid"),
+          galleryEmpty = document.getElementById("galleryEmpty"),
+          galleryCount = document.getElementById("galleryCount"),
+          galleryWarning = document.getElementById("galleryWarning"),
+          galleryWarningText = document.getElementById("galleryWarningText"),
+          refreshGalleryBtn = document.getElementById("refreshGalleryBtn");
 
     let originalFile = null,
         compressedBlob = null,
@@ -1755,7 +2087,11 @@
           download.style.display = "inline-flex";
           uploadBtn.style.display = "inline-flex";
 
-          showStatus(`Compressed successfully! Saved ${saved.toFixed(1)}% of original size.`, "success");
+          if (blob.size >= originalFile.size) {
+            showStatus("Image is already highly optimized. Try lower quality (e.g. 50% Eco) for smaller size.", "info");
+          } else {
+            showStatus(`Compressed successfully! Saved ${saved.toFixed(1)}% of original size.`, "success");
+          }
         }, "image/jpeg", Number(quality.value) / 100);
       };
 
@@ -1768,6 +2104,7 @@
       image.src = activeOriginalUrl;
     });
 
+    // UPLOAD TO S3
     uploadBtn.addEventListener("click", async () => {
       if (!compressedBlob || !originalFile) return;
 
@@ -1788,10 +2125,19 @@
         }
 
         if (data.url) {
-          showStatus("", "success", `Uploaded to S3! <a class="status-link" href="${data.url}" target="_blank" rel="noopener">View File ↗</a>`);
+          showStatus("", "success", `Uploaded to S3 successfully! <a class="status-link" href="${data.url}" target="_blank" rel="noopener">View File ↗</a>`);
         } else {
           showStatus("Uploaded successfully to AWS S3.", "success");
         }
+
+        // Refresh S3 Gallery immediately
+        loadGallery();
+
+        // Smooth scroll to gallery
+        setTimeout(() => {
+          galleryCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
+
       } catch (e) {
         showStatus(e.message || "Failed to upload to S3. Check credentials.", "error");
       } finally {
@@ -1819,6 +2165,99 @@
       compressBtnText.textContent = "Compress Image";
       setQuality(75);
     });
+
+    // ---------------------------------------------
+    // S3 CLOUD GALLERY LOGIC
+    // ---------------------------------------------
+    async function loadGallery() {
+      try {
+        refreshGalleryBtn.disabled = true;
+        refreshGalleryBtn.innerHTML = `<svg class="spinner" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg> Refreshing...`;
+
+        const res = await fetch("/api/images");
+        const data = await res.json();
+
+        if (data.warning) {
+          galleryWarning.style.display = "flex";
+          galleryWarningText.innerHTML = `<strong>AWS Setup Tip:</strong> ${data.warning} <br><span style="font-size:12px;opacity:0.9">To show all bucket files, add <code>s3:ListBucket</code> policy to your user <code>iamacessforminiimage</code> in AWS IAM.</span>`;
+        } else {
+          galleryWarning.style.display = "none";
+        }
+
+        const images = data.images || [];
+        galleryCount.textContent = `${images.length} File${images.length === 1 ? '' : 's'}`;
+
+        if (images.length === 0) {
+          galleryEmpty.style.display = "block";
+          galleryGrid.innerHTML = "";
+          return;
+        }
+
+        galleryEmpty.style.display = "none";
+        galleryGrid.innerHTML = images.map(img => {
+          const dateStr = img.lastModified ? new Date(img.lastModified).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          }) : 'Recently';
+
+          return `
+            <div class="gallery-item">
+              <div class="gallery-thumb-wrap">
+                <img src="${img.url}" alt="${img.name}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'40\\' height=\\'40\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'%2394a3b8\\' stroke-width=\\'2\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\' ry=\\'2\\'/></svg>'">
+              </div>
+              <div class="gallery-item-body">
+                <div class="gallery-item-name" title="${img.name}">${img.name}</div>
+                <div class="gallery-item-meta">
+                  <span class="gallery-item-size">${size(img.size)}</span>
+                  <span>${dateStr}</span>
+                </div>
+                <div class="gallery-item-actions">
+                  <a href="${img.url}" target="_blank" rel="noopener" class="gallery-btn-open">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    View
+                  </a>
+                  <button type="button" class="gallery-btn-copy" onclick="copyImageUrl('${img.url}', this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+      } catch (err) {
+        console.error("Gallery load error:", err);
+      } finally {
+        refreshGalleryBtn.disabled = false;
+        refreshGalleryBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh`;
+      }
+    }
+
+    // Helper to copy S3 presigned URL
+    window.copyImageUrl = function(url, btn) {
+      navigator.clipboard.writeText(url).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `✓ Copied!`;
+        btn.style.borderColor = "var(--success)";
+        btn.style.color = "var(--success-text)";
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1800);
+      }).catch(() => {
+        prompt("Copy image link:", url);
+      });
+    };
+
+    refreshGalleryBtn.addEventListener("click", loadGallery);
+
+    // Initial load on page startup
+    document.addEventListener("DOMContentLoaded", loadGallery);
+    // Also trigger if DOM is already ready
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      loadGallery();
+    }
   </script>
 </body>
 </html>
