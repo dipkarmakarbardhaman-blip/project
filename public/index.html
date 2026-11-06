@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>OptiSnap • Mini Image Compressor & Cloud Sync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-ring: rgba(79, 70, 229, 0.25);
+      
+      --accent: #06b6d4;
+      --accent-light: #ecfeff;
+      
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --success-text: #065f46;
+      
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --danger-text: #991b1b;
+      
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+
+      --card-bg: #ffffff;
+      --card-border: rgba(226, 232, 240, 0.85);
+      --card-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.04);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.09) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(241, 245, 249, 0.7) 0px, transparent 100%);
+      background-attachment: fixed;
+      color: var(--slate-900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* -------------------------------------------
+       NAVBAR
+    ------------------------------------------- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      transition: all 0.2s ease;
+    }
+
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--slate-900);
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -0.025em;
+    }
+
+    .nav-logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.28);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--slate-600);
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-cta-btn {
+      background: var(--primary);
+      color: #ffffff !important;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13.5px;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.22);
+      transition: all 0.2s ease;
+    }
+
+    .nav-cta-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+    }
+
+    /* -------------------------------------------
+       HERO & COMPRESSOR SECTION
+    ------------------------------------------- */
+    .hero-section {
+      width: 100%;
+      padding: clamp(32px, 5vw, 60px) 16px clamp(40px, 6vw, 70px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    .hero-intro {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+      border: 1px solid rgba(79, 70, 229, 0.16);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.06);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 5.5vw, 38px);
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      color: var(--slate-500);
+      font-size: clamp(14px, 3.2vw, 16px);
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* -------------------------------------------
+       COMPRESSOR TOOL CARD
+    ------------------------------------------- */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: clamp(20px, 4.5vw, 36px);
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--card-border);
+      position: relative;
+    }
+
+    /* Upload Area */
+    .drop {
+      border: 2px dashed var(--slate-300);
+      border-radius: var(--radius-lg);
+      padding: clamp(28px, 6vw, 44px) 20px;
+      text-align: center;
+      cursor: pointer;
+      background: #fafcff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .drop:hover {
+      border-color: var(--primary);
+      background: #f5f8ff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px -8px rgba(79, 70, 229, 0.14);
+    }
+
+    .drop.dragover {
+      border-color: var(--primary);
+      border-style: solid;
+      background: #eef2ff;
+      transform: scale(1.01);
+      box-shadow: 0 0 0 4px var(--primary-ring);
+    }
+
+    .drop-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.14);
+    }
+
+    .drop:hover .drop-icon-wrap {
+      transform: scale(1.1) rotate(-3deg);
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .drop strong {
+      font-size: clamp(15px, 3.2vw, 17px);
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+
+    .drop strong .browse-highlight {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .format-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .pill-item {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border-radius: 6px;
+      border: 1px solid var(--slate-200);
+    }
+
+    .drop input {
+      display: none;
+    }
+
+    /* Preview Section */
+    .preview {
+      margin-top: 24px;
+      display: none;
+      animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .file-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--slate-700);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    .file-meta svg {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .file-name-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .preview-img-box {
+      width: 100%;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: #f1f5f9;
+      background-image: 
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%), 
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+      border: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 380px;
+    }
+
+    .preview-img-box img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Quality Settings */
+    .quality-panel {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-top: 20px;
+    }
+
+    .quality-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quality-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .q-badge {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 3px 11px;
+      border-radius: 9999px;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .slider-row input[type="range"] {
+      flex: 1;
+      height: 7px;
+      background: var(--slate-200);
+      border-radius: 8px;
+      outline: none;
+      accent-color: var(--primary);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .slider-row input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .preset-pills {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-600);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .preset-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: rgba(79, 70, 229, 0.3);
+    }
+
+    .preset-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button, .btn {
+      font-family: inherit;
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 12px 22px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      min-height: 48px;
+      line-height: 1;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible, .btn:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    button:active, .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.28);
+      flex: 2 1 180px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.36);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      background: var(--slate-400);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+      flex: 1 1 110px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+      border-color: var(--slate-300);
+    }
+
+    .btn-dark {
+      background: var(--slate-900);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
+    }
+
+    .btn-dark:hover {
+      background: #020617;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.3);
+    }
+
+    .btn-cloud {
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.28);
+    }
+
+    .btn-cloud:hover {
+      background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(14, 165, 233, 0.36);
+    }
+
+    .btn-cloud:disabled {
+      background: var(--slate-400);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
+    }
+
+    .stat-card:hover {
+      border-color: var(--slate-300);
+      transform: translateY(-1px);
+    }
+
+    .stat-card.highlight {
+      background: var(--success-light);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .stat-card b {
+      display: block;
+      font-size: clamp(16px, 3.8vw, 21px);
+      color: var(--slate-900);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      word-break: break-word;
+      line-height: 1.25;
+    }
+
+    .stat-card.highlight b {
+      color: var(--success-text);
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: clamp(11px, 2.4vw, 12px);
+      color: var(--slate-500);
+      font-weight: 600;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-card.highlight span {
+      color: var(--success-text);
+      opacity: 0.85;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-top: 18px;
+    }
+
+    .bar {
+      height: 9px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 50%, var(--success) 100%);
+      border-radius: 9999px;
+      transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Status Notifications */
+    .status-box {
+      margin-top: 16px;
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.5;
+      word-break: break-word;
+      min-height: 0;
+      display: none;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .status-box.show {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-box.info {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    .status-box.success {
+      background: var(--success-light);
+      color: var(--success-text);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-box.error {
+      background: var(--danger-light);
+      color: var(--danger-text);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .status-box svg {
+      flex-shrink: 0;
+    }
+
+    .status-link {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-left: 4px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .action-row .btn {
+      flex: 1 1 200px;
+    }
+
+    .spinner {
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* -------------------------------------------
+       "HOW TO USE" SECTION (কী করে ব্যবহার করবেন)
+    ------------------------------------------- */
+    .section-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: clamp(48px, 8vw, 84px) 20px;
+      width: 100%;
+    }
+
+    .section-heading-wrap {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 48px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(79, 70, 229, 0.15);
+    }
+
+    .section-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .section-desc {
+      color: var(--slate-500);
+      font-size: clamp(14px, 2.5vw, 16px);
+      line-height: 1.6;
+    }
+
+    /* Step Cards Grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: clamp(22px, 3.5vw, 32px);
+      position: relative;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .step-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79, 70, 229, 0.3);
+      box-shadow: 0 16px 32px -8px rgba(79, 70, 229, 0.12);
+    }
+
+    .step-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .step-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--slate-900);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-card:hover .step-badge {
+      background: var(--primary);
+    }
+
+    .step-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .step-card:hover .step-icon-box {
+      transform: scale(1.1);
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+      letter-spacing: -0.015em;
+    }
+
+    .step-text {
+      color: var(--slate-500);
+      font-size: 14px;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .step-hint {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--slate-200);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* -------------------------------------------
+       FEATURES / BENEFITS SECTION
+    ------------------------------------------- */
+    .features-wrap {
+      background: #ffffff;
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-item {
+      padding: 24px 20px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      transition: all 0.2s ease;
+    }
+
+    .feature-item:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 10px 24px -6px rgba(79, 70, 229, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+    }
+
+    .feature-desc {
+      font-size: 13.5px;
+      color: var(--slate-500);
+      line-height: 1.55;
+    }
+
+    /* -------------------------------------------
+       FAQ ACCORDION SECTION
+    ------------------------------------------- */
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .faq-card:hover {
+      border-color: var(--slate-300);
+    }
+
+    .faq-card summary {
+      padding: 18px 20px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--slate-800);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .faq-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-card summary svg {
+      color: var(--slate-400);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-card[open] summary svg {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    .faq-card[open] {
+      border-color: rgba(79, 70, 229, 0.4);
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.06);
+    }
+
+    .faq-content {
+      padding: 0 20px 18px;
+      font-size: 14px;
+      color: var(--slate-600);
+      line-height: 1.6;
+    }
+
+    /* -------------------------------------------
+       FOOTER
+    ------------------------------------------- */
+    .footer {
+      background: var(--slate-900);
+      color: var(--slate-400);
+      padding: 44px 20px 28px;
+      border-top: 1px solid var(--slate-800);
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--slate-400);
+      margin-top: 4px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--slate-300);
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    .footer-bottom {
+      max-width: 1140px;
+      margin: 20px auto 0;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--slate-500);
+    }
+
+    /* -------------------------------------------
+       RESPONSIVE BREAKPOINTS
+    ------------------------------------------- */
+    @media (max-width: 900px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links a:not(.nav-cta-btn) {
+        display: none;
+      }
+
+      .hero-section {
+        padding: 24px 12px 40px;
+      }
+
+      .card {
+        padding: 18px 14px;
+        border-radius: 18px;
+      }
+
+      .drop {
+        padding: 24px 12px;
+      }
+
+      .preset-pills {
+        gap: 6px;
+      }
+
+      .preset-btn {
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+      }
+
+      .btn-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        flex: 1 1 auto;
+      }
+
+      .preview-img-box,
+      .preview-img-box img {
+        max-height: 240px;
+      }
+
+      .action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .action-row .btn {
+        width: 100%;
+        flex: 1 1 auto;
+      }
+
+      .footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .card {
+        padding: 16px 12px;
+        border-radius: 16px;
+      }
+
+      .stats {
+        gap: 6px;
+      }
+
+      .stat-card {
+        padding: 10px 6px;
+      }
+
+      .stat-card b {
+        font-size: 15px;
+      }
+
+      .stat-card span {
+        font-size: 9.5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <div class="nav-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span>OptiSnap</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#compressor">Compressor</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#compressor" class="nav-cta-btn">Compress Image</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- HERO & COMPRESSOR SECTION -->
+  <main class="hero-section" id="compressor">
+    <div class="wrap">
+      
+      <div class="hero-intro">
+        <div class="badge-pill">
+          <span class="badge-dot"></span>
+          Fast Client-Side Compression • AWS S3 Ready
+        </div>
+        <h1 class="hero-title">
+          <span>Smart Image</span>
+          <span class="gradient-text">Compressor</span>
+        </h1>
+        <p class="hero-sub">
+          Shrink JPG, PNG & WebP images up to 85% directly inside your browser without compromising quality. Fast, private, and synced with cloud storage.
+        </p>
+      </div>
+
+      <!-- MAIN INTERACTIVE TOOL CARD -->
+      <div class="card">
+        
+        <!-- Upload Dropzone -->
+        <label class="drop" id="dropZone">
+          <input id="file" type="file" accept="image/*">
+          <div class="drop-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <strong>Drag and drop image or <span class="browse-highlight">Browse files</span></strong>
+          <div class="format-pills">
+            <span class="pill-item">JPG</span>
+            <span class="pill-item">PNG</span>
+            <span class="pill-item">WEBP</span>
+            <span class="pill-item">Max 15 MB</span>
+          </div>
+        </label>
+
+        <!-- Preview & Control Area -->
+        <div id="preview" class="preview">
+          
+          <div class="preview-header">
+            <div class="file-meta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span class="file-name-text" id="fileName">image.jpg</span>
+            </div>
+          </div>
+
+          <div class="preview-img-box">
+            <img id="imagePreview" alt="Image preview">
+          </div>
+
+          <!-- Quality Settings -->
+          <div class="quality-panel">
+            <div class="quality-header">
+              <div class="quality-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="4" y1="21" x2="4" y2="14"/>
+                  <line x1="4" y1="10" x2="4" y2="3"/>
+                  <line x1="12" y1="21" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12" y2="3"/>
+                  <line x1="20" y1="21" x2="20" y2="16"/>
+                  <line x1="20" y1="12" x2="20" y2="3"/>
+                  <line x1="1" y1="14" x2="7" y2="14"/>
+                  <line x1="9" y1="8" x2="15" y2="8"/>
+                  <line x1="17" y1="16" x2="23" y2="16"/>
+                </svg>
+                Compression Quality
+              </div>
+              <span class="q-badge" id="qvalue">75%</span>
+            </div>
+
+            <div class="slider-row">
+              <input id="quality" type="range" min="30" max="95" value="75">
+            </div>
+
+            <div class="preset-pills">
+              <button type="button" class="preset-btn" data-val="50">⚡ Eco (50%)</button>
+              <button type="button" class="preset-btn active" data-val="75">⚖️ Balanced (75%)</button>
+              <button type="button" class="preset-btn" data-val="85">✨ High (85%)</button>
+              <button type="button" class="preset-btn" data-val="95">💎 Ultra (95%)</button>
+            </div>
+          </div>
+
+          <!-- Compress Action Row -->
+          <div class="btn-row">
+            <button class="btn btn-primary" id="compress">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <span id="compressBtnText">Compress Image</span>
+            </button>
+            <button class="btn btn-secondary" id="reset">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+              Reset
+            </button>
+          </div>
+
+          <!-- Metrics Dashboard -->
+          <div class="stats">
+            <div class="stat-card">
+              <b id="original">-</b>
+              <span>Original Size</span>
+            </div>
+            <div class="stat-card">
+              <b id="compressed">-</b>
+              <span>Optimized Size</span>
+            </div>
+            <div class="stat-card highlight">
+              <b id="saved">-</b>
+              <span>Space Saved</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-wrap">
+            <div class="bar">
+              <div class="fill" id="fill"></div>
+            </div>
+          </div>
+
+          <!-- Live Status Notification -->
+          <div class="status-box" id="statusBox">
+            <span id="statusIcon"></span>
+            <span id="statusText"></span>
+          </div>
+
+          <!-- Download & Cloud Upload -->
+          <div class="action-row">
+            <a id="download" class="btn btn-dark" style="display:none" target="_blank">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download Compressed
+            </a>
+            <button class="btn btn-cloud" id="upload" style="display:none">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+              </svg>
+              <span id="uploadBtnText">Upload to AWS S3</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- HOW TO USE SECTION (কীভাবে ব্যবহার করবেন) -->
+  <section class="section-container" id="how-it-works">
+    <div class="section-heading-wrap">
+      <span class="section-tag">Easy Step-by-Step</span>
+      <h2 class="section-title">How To Use Mini Compressor</h2>
+      <p class="section-desc">
+        Optimize your images in three effortless steps with real-time feedback and instant cloud backup.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge">1</div>
+          <div class="step-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="step-title">Select or Paste Image</h3>
+        <p class="step-text">
+          Drag and drop any JPG, PNG, or WebP photo into the upload box, click to browse from your device, or simply press <strong>Ctrl+V</strong> to paste a copied screenshot directly.
+        </p>
+        <div class="step-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Supports files up to 15 MB
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge">2</div>
+          <div class="step-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14"/>
+              <line x1="4" y1="10" x2="4" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12" y2="3"/>
+              <line x1="20" y1="21" x2="20" y2="16"/>
+              <line x1="20" y1="12" x2="20" y2="3"/>
+              <line x1="1" y1="14" x2="7" y2="14"/>
+              <line x1="9" y1="8" x2="15" y2="8"/>
+              <line x1="17" y1="16" x2="23" y2="16"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="step-title">Choose Quality & Compress</h3>
+        <p class="step-text">
+          Pick your preferred quality level using the slider or click quick preset buttons like <strong>75% Balanced</strong>. Then tap <strong>Compress Image</strong> to process instantly.
+        </p>
+        <div class="step-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Instant client-side canvas processing
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-top">
+          <div class="step-badge">3</div>
+          <div class="step-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="step-title">Download or Upload to S3</h3>
+        <p class="step-text">
+          Review your original size, compressed size, and percentage saved. Click <strong>Download</strong> to save immediately, or push to <strong>AWS S3</strong> with pre-signed URL protection.
+        </p>
+        <div class="step-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Zero quality loss for web usage
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES / BENEFITS SECTION -->
+  <section class="features-wrap" id="features">
+    <div class="section-container">
+      <div class="section-heading-wrap">
+        <span class="section-tag">Key Advantages</span>
+        <h2 class="section-title">Engineered For Speed & Privacy</h2>
+        <p class="section-desc">Everything you need to deliver blazing-fast websites and optimized image assets.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">100% Private & In-Browser</h4>
+          <p class="feature-desc">All image re-encoding happens inside your browser via HTML5 Canvas. Your sensitive files are never sent to external servers unless you upload.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Zero Server Lag</h4>
+          <p class="feature-desc">Without heavy backend image queuing or bandwidth bottlenecks, compression finishes in mere milliseconds with instant size reduction.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">AWS S3 Cloud Storage</h4>
+          <p class="feature-desc">Integrated Node.js backend uploads optimized images to AWS S3 and generates temporary pre-signed links for secure media access.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="section-container" id="faq">
+    <div class="section-heading-wrap">
+      <span class="section-tag">Frequently Asked</span>
+      <h2 class="section-title">Common Questions</h2>
+      <p class="section-desc">Quick answers to help you get the best image results.</p>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-card" open>
+        <summary>
+          <span>What image formats are supported?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-content">
+          You can compress JPG, JPEG, PNG, and WebP images up to 15 MB. The compressor exports clean, lightweight JPEG binaries designed for lightning-fast web loading.
+        </div>
+      </details>
+
+      <details class="faq-card">
+        <summary>
+          <span>What quality preset should I use?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-content">
+          For standard websites and portfolios, <strong>75% (Balanced)</strong> yields the highest file size savings (typically 60%–80%) with virtually no perceptible visual loss. For photography and art, use <strong>85% (High)</strong>.
+        </div>
+      </details>
+
+      <details class="faq-card">
+        <summary>
+          <span>How does the AWS S3 upload work?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-content">
+          When configured in your <code>.env</code> file, clicking "Upload to AWS S3" sends the optimized image to your private bucket and returns an authenticated signed URL valid for 1 hour.
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-brand">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>OptiSnap Mini Compressor</span>
+        </div>
+        <p class="footer-desc">Professional in-browser image optimization with AWS S3 cloud connectivity.</p>
+      </div>
+
+      <ul class="footer-links">
+        <li><a href="#compressor">Compressor</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-bottom">
+      &copy; 2026 OptiSnap. Built for high-performance web experiences.
+    </div>
+  </footer>
+
+  <script>
+    const fileInput = document.getElementById("file"),
+          dropZone = document.getElementById("dropZone"),
+          preview = document.getElementById("preview"),
+          img = document.getElementById("imagePreview"),
+          fileNameEl = document.getElementById("fileName"),
+          quality = document.getElementById("quality"),
+          qvalue = document.getElementById("qvalue"),
+          compressBtn = document.getElementById("compress"),
+          compressBtnText = document.getElementById("compressBtnText"),
+          uploadBtn = document.getElementById("upload"),
+          uploadBtnText = document.getElementById("uploadBtnText"),
+          download = document.getElementById("download"),
+          statusBox = document.getElementById("statusBox"),
+          statusText = document.getElementById("statusText"),
+          statusIcon = document.getElementById("statusIcon"),
+          originalEl = document.getElementById("original"),
+          compressedEl = document.getElementById("compressed"),
+          savedEl = document.getElementById("saved"),
+          fill = document.getElementById("fill"),
+          reset = document.getElementById("reset"),
+          presetBtns = document.querySelectorAll(".preset-btn");
+
+    let originalFile = null,
+        compressedBlob = null,
+        activeOriginalUrl = null,
+        activeDownloadUrl = null;
+
+    function size(bytes) {
+      if (!bytes && bytes !== 0) return "-";
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
+
+    function showStatus(message, type = "info", htmlContent = null) {
+      statusBox.className = `status-box show ${type}`;
+      
+      let iconSvg = '';
+      if (type === "success") {
+        iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+      } else if (type === "error") {
+        iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+      } else {
+        iconSvg = `<svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>`;
+      }
+      statusIcon.innerHTML = iconSvg;
+
+      if (htmlContent) {
+        statusText.innerHTML = htmlContent;
+      } else {
+        statusText.textContent = message;
+      }
+    }
+
+    function hideStatus() {
+      statusBox.className = "status-box";
+      statusText.textContent = "";
+      statusIcon.innerHTML = "";
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        showStatus("Please choose a valid image file (JPG, PNG, or WebP).", "error");
+        return;
+      }
+
+      originalFile = file;
+      fileNameEl.textContent = file.name;
+
+      if (activeOriginalUrl) URL.revokeObjectURL(activeOriginalUrl);
+      activeOriginalUrl = URL.createObjectURL(originalFile);
+
+      img.src = activeOriginalUrl;
+      preview.style.display = "block";
+      originalEl.textContent = size(originalFile.size);
+      compressedEl.textContent = "-";
+      savedEl.textContent = "-";
+      fill.style.width = "0%";
+      download.style.display = "none";
+      uploadBtn.style.display = "none";
+      hideStatus();
+
+      if (window.innerWidth < 640) {
+        preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleFile(fileInput.files[0]);
+      }
+    });
+
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('dragover');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('dragover');
+      }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      if (dt && dt.files && dt.files[0]) {
+        handleFile(dt.files[0]);
+      }
+    });
+
+    document.addEventListener('paste', (e) => {
+      if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+        const file = e.clipboardData.files[0];
+        if (file.type.startsWith("image/")) {
+          handleFile(file);
+        }
+      }
+    });
+
+    function setQuality(val) {
+      quality.value = val;
+      qvalue.textContent = val + "%";
+      presetBtns.forEach(btn => {
+        if (btn.getAttribute("data-val") === String(val)) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    quality.addEventListener("input", () => {
+      setQuality(quality.value);
+    });
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        setQuality(btn.getAttribute("data-val"));
+      });
+    });
+
+    compressBtn.addEventListener("click", () => {
+      if (!originalFile) return;
+
+      showStatus("Compressing image...", "info");
+      compressBtn.disabled = true;
+      compressBtnText.textContent = "Compressing...";
+
+      const image = new Image();
+      image.onload = () => {
+        const max = 1800;
+        const scale = Math.min(1, max / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(blob => {
+          compressBtn.disabled = false;
+          compressBtnText.textContent = "Compress Again";
+
+          if (!blob) {
+            showStatus("Compression failed. Please try again.", "error");
+            return;
+          }
+
+          compressedBlob = blob;
+          compressedEl.textContent = size(blob.size);
+
+          const saved = Math.max(0, ((1 - blob.size / originalFile.size) * 100));
+          savedEl.textContent = saved.toFixed(1) + "%";
+          fill.style.width = Math.min(100, Math.max(4, saved)) + "%";
+
+          if (activeDownloadUrl) URL.revokeObjectURL(activeDownloadUrl);
+          activeDownloadUrl = URL.createObjectURL(blob);
+
+          download.href = activeDownloadUrl;
+          const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
+          download.download = "optimized-" + baseName + ".jpg";
+
+          download.style.display = "inline-flex";
+          uploadBtn.style.display = "inline-flex";
+
+          showStatus(`Compressed successfully! Saved ${saved.toFixed(1)}% of original size.`, "success");
+        }, "image/jpeg", Number(quality.value) / 100);
+      };
+
+      image.onerror = () => {
+        compressBtn.disabled = false;
+        compressBtnText.textContent = "Compress Image";
+        showStatus("Could not decode image for compression.", "error");
+      };
+
+      image.src = activeOriginalUrl;
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      if (!compressedBlob || !originalFile) return;
+
+      uploadBtn.disabled = true;
+      uploadBtnText.textContent = "Uploading...";
+      showStatus("Uploading compressed image to AWS S3...", "info");
+
+      const baseName = originalFile.name.replace(/\.[^/.]+$/, "");
+      const fd = new FormData();
+      fd.append("image", compressedBlob, "optimized-" + baseName + ".jpg");
+
+      try {
+        const r = await fetch("/api/upload", { method: "POST", body: fd });
+        const data = await r.json();
+
+        if (!r.ok) {
+          throw new Error(data.error || "Upload failed");
+        }
+
+        if (data.url) {
+          showStatus("", "success", `Uploaded to S3! <a class="status-link" href="${data.url}" target="_blank" rel="noopener">View File ↗</a>`);
+        } else {
+          showStatus("Uploaded successfully to AWS S3.", "success");
+        }
+      } catch (e) {
+        showStatus(e.message || "Failed to upload to S3. Check credentials.", "error");
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtnText.textContent = "Upload to AWS S3";
+      }
+    });
+
+    reset.addEventListener("click", () => {
+      if (activeOriginalUrl) URL.revokeObjectURL(activeOriginalUrl);
+      if (activeDownloadUrl) URL.revokeObjectURL(activeDownloadUrl);
+      originalFile = null;
+      compressedBlob = null;
+      activeOriginalUrl = null;
+      activeDownloadUrl = null;
+      fileInput.value = "";
+      preview.style.display = "none";
+      hideStatus();
+      fill.style.width = "0%";
+      originalEl.textContent = "-";
+      compressedEl.textContent = "-";
+      savedEl.textContent = "-";
+      download.style.display = "none";
+      uploadBtn.style.display = "none";
+      compressBtnText.textContent = "Compress Image";
+      setQuality(75);
+    });
+  </script>
+</body>
+</html>
